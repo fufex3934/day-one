@@ -1,19 +1,15 @@
 import React from 'react'
-import Link from 'next/link'
-const DashboardLayout = ({children}:{
+
+const DashboardLayout = ({children,team,analytics}:{
   children:React.ReactNode,
+  team:React.ReactNode,
+  analytics:React.ReactNode,
 }) => {
   return (
-    <div>
-      <nav style={{background:'#eee',padding:'1rem'}}>
-        <h2>Dashboard Sidebar</h2>
-        <ul>
-        <Link href={"/"}><li>🏠 Home</li></Link>
-        <Link href={"/dashboard/settings"}><li>⚙️ Settings</li></Link>
-        <Link href={"/dashboard"}><li> Dashboard</li></Link>
-        </ul>
-      </nav>
-      <main style={{padding:'1rem',border:'1px solid green'}}>{children}</main>
+    <div className='flex h-screen'>
+      <div className='flex-1 p-4'>{children}</div>
+      <div className='w-1/2 p-4 border-1'>{analytics}</div>
+      <div className='w-1/2 p-4 border-1'>{team}</div>
     </div>
   )
 }
