@@ -20,17 +20,13 @@ type ErrorState = {
 };
 
 export function ContactFormUpdate({ contact }: { contact: Contact }) {
-  const [name, setName] = useState(contact.name);
-  const [message, setMessage] = useState(contact.message);
   const [error, setError] = useState<ErrorState>({});
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleUpdate = async (e: FormEvent) => {
+  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("message", message);
+    const formData = new FormData(e.currentTarget);
 
     const result = await updateContact(contact.id, initialState, formData);
 
@@ -38,13 +34,12 @@ export function ContactFormUpdate({ contact }: { contact: Contact }) {
       setError(result.errors);
     } else {
       setError({});
-      setIsEditing(false); 
       alert("Contact updated");
+      setIsEditing(false);
     }
   };
 
-  const handleDelete = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleDelete = async () => {
     await deleteContact(contact.id);
     alert("Contact deleted");
   };
@@ -54,62 +49,52 @@ export function ContactFormUpdate({ contact }: { contact: Contact }) {
       {isEditing ? (
         <form onSubmit={handleUpdate} className="flex flex-col gap-2">
           <input
+            name="name"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            defaultValue={contact.name}
             className="border p-2 rounded"
           />
           {error.name && <p className="text-red-500">{error.name}</p>}
 
           <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            name="message"
+            defaultValue={contact.message}
             className="border p-2 rounded"
           />
           {error.message && <p className="text-red-500">{error.message}</p>}
 
           <div className="flex gap-2">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-1 rounded"
-            >
-              Save
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+              Update
             </button>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="bg-gray-300 px-4 py-1 rounded"
+              className="bg-gray-500 text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
           </div>
         </form>
       ) : (
-        <>
-          <p>
-            <strong>Name:</strong> {name}
-          </p>
-          <p>
-            <strong>Message:</strong> {message}
-          </p>
-
-          <div className="flex gap-2">
+        <div>
+          <p><strong>Name:</strong> {contact.name}</p>
+          <p><strong>Message:</strong> {contact.message}</p>
+          <div className="flex gap-2 mt-2">
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-green-500 text-white px-4 py-1 rounded"
+              className="bg-yellow-500 text-white px-4 py-2 rounded"
             >
               Edit
             </button>
-            <form onSubmit={handleDelete}>
-              <button
-                type="submit"
-                className="bg-red-500 text-white px-4 py-1 rounded"
-              >
-                Delete
-              </button>
-            </form>
+            <button
+              onClick={handleDelete}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Delete
+            </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

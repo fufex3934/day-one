@@ -1,9 +1,25 @@
-import Clock from "./components/Clock";
+'use client';
+
+import { signIn, signOut, useSession } from "next-auth/react";
+
 export default function HomePage() {
+  const { data: session } = useSession();
+
   return (
-    <main className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold">📊 Welcome to the Dashboard</h1>
-      <Clock />
+    <main className="p-10">
+      <h1 className="text-2xl">Welcome to the App</h1>
+
+      {session ? (
+        <>
+          <p>Hello, {session.user?.name}</p>
+          <button onClick={() => signOut()}>Logout</button>
+        </>
+      ) : (
+        <>
+          <p>You are not logged in.</p>
+          <button onClick={() => signIn("github")}>Login with GitHub</button>
+        </>
+      )}
     </main>
   );
 }
