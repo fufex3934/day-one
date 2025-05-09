@@ -1,17 +1,35 @@
-// src/app/layout.tsx
-'use client';
-
-import './globals.css';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import { ReactNode } from 'react';
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "My Cool App",
+  description: "The best app in the world!",
+};
+
+export default function RootLayout({
+  children,
+  
+}: Readonly<{
+  children: React.ReactNode;
+ 
+}>) {
   return (
     <html lang="en">
-      <body>
-        <SessionProvider>
-          {children}
-        </SessionProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
       </body>
     </html>
   );
